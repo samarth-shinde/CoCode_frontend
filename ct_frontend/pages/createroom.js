@@ -24,7 +24,7 @@ export default function CreateRoom() {
 
   return (
     <>
-      <div className=" flex items-center justify-center mt-[10vh] w-full">
+      <div className=" flex items-center justify-center mt-[10vh] w-full bg-[#1C1C28]">
         <div className="w-full">
           <div className=" flex justify-center">
             <div>
@@ -38,16 +38,16 @@ export default function CreateRoom() {
 
           <div
             id="join"
-            className="flex w-full justify-center mt-5 px-6 md:px-0"
+            className="flex w-full justify-center mt-5 px-6 md:px-0 bg-[#1C1C28]"
           >
-            <div className=" md:w-1/2">
+            <div className=" md:w-1/2 bg-[#1C1C28]">
               <Link href={auth_token ? `playground/${username}` : "/login"}>
                 <button className="bg-primary text-white hover:scale-[100.5%] hover:bg-offPrimary ease-in-out duration-100 rounded-xl px-3 py-2.5 font-semibold w-full mt-5">
                   Create Room
                 </button>
               </Link>
 
-              <div className="flex justify-center">
+              <div className="flex justify-center bg-[#1C1C28]">
                 <input
                   className="bg-offBlack rounded-lg px-3 py-2 mt-5 mr-1 md:mr-3 w-4/5"
                   placeholder="Room Name"

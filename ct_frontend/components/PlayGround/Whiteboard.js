@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Loader from "../Loader";
 import config from "../../config";
+import Spinner from "../Spinner";
 
 export default function Whiteboard({ username }) {
   const [cookieUsername, setCookieUsername, removeCookieUsername] = useCookies([
@@ -84,7 +85,7 @@ export default function Whiteboard({ username }) {
     let canvas = document.querySelector("#canvas");
     let ctx = canvas.getContext("2d");
 
-    let sketch = document.querySelector("#sketch");
+    let sketch = document.querySelector(".sketch");
     const sketch_style = getComputedStyle(sketch);
     canvas.width = parseInt(sketch_style.getPropertyValue("width"));
     canvas.height = parseInt(sketch_style.getPropertyValue("height"));
@@ -260,10 +261,12 @@ export default function Whiteboard({ username }) {
   return (
     <>
       {ws ? (
-        <div className=" mt-[2rem] px-[2rem] m-auto">
-          <div className="flex justify-between items-end">
+        <div className="">
+       
+
+          <div className="flex justify-between items-end bg-[#1C1C28] overflow-hidden">
             <button
-              className="bg-success text-black p-3 rounded-full text-xl mb-3"
+              className="bg-success text-black p-3 rounded-full text-xl"
               onClick={() => {
                 disconnectBoard();
               }}
@@ -272,19 +275,20 @@ export default function Whiteboard({ username }) {
             </button>
 
             <button
-              className="bg-success text-black p-3 rounded-full text-xl mb-3"
+              className="bg-success text-black p-3 rounded-full text-xl"
               onClick={() => clearCanvas()}
             >
               <AiOutlineClear />
             </button>
-            <CirclePicker color={currentColor} onChange={handleColorChange} />
+            <CirclePicker color={currentColor} onChange={handleColorChange} className="right-5"/>
           </div>
+            <div id="sketch" className="sketch">
+              <canvas id="canvas" className="bg-white w-full"></canvas>
+            </div>
 
-          <div id="sketch" className="sketch">
-            <canvas id="canvas" className="bg-white w-full h-[500px]"></canvas>
-          </div>
+            
 
-          <div className="mt-4">
+          <div className="mt-2 bg-[#1C1C28]">
             <label htmlFor="brushSize">Brush Size:</label>
             <input
               type="range"
@@ -295,14 +299,9 @@ export default function Whiteboard({ username }) {
               value={brushSize}
               onChange={handleBrushSizeChange}
             />
-          </div>
-          <div className="mt-4 flex justify-center ">
             <button className="px-2" onClick={() => drawShape("rectangle")}>Rectangle</button>
             <button className="px-2" onClick={() => drawShape("circle")}>Circle</button>
             <button className="px-2" onClick={() => drawShape("triangle")}>Triangle</button>
-          </div>
-
-          <div className="mt-4 flex justify-center">
             <button
               onClick={undo}
               disabled={undoStack.length === 0}
@@ -318,10 +317,11 @@ export default function Whiteboard({ username }) {
               Redo
             </button>
           </div>
+       
         </div>
       ) : (
         <div>
-          <Loader />
+          <Spinner />
         </div>
       )}
     </>

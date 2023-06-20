@@ -32,7 +32,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="flex items-center flex-wrap bg-bgBlack p-4">
+      <nav className="flex items-center flex-wrap bg-[#1C1C28] p-4">
         <Link href="/">
           <a className="inline-flex items-center p-2 lg:ml-8">
             <Image src={Logo} />

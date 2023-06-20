@@ -34,7 +34,7 @@ export default function Updates() {
   const [data, setData] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [droppedContests, setDroppedContests] = useState([]);
-
+  const [selectedReminders, setSelectedReminders] = useState([]);
   useEffect(() => {
     axios.get("https://kontests.net/api/v1/all").then((res) => {
       console.log(res.data);
@@ -66,45 +66,27 @@ export default function Updates() {
     });
   };
 
-  const createEvents = async (credentialData) => {
-    try {
-      const response = await fetch(
-        `${config.baseURL}/api/create-batch-events/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({
-            credential: JSON.stringify(credentialData),
-            droppedContests: JSON.stringify(droppedContests),
-          }),
-        }
-      );
+  const sendEmailReminders = (contests) => {
+    // Send an HTTP POST request to your backend endpoint to send the email reminders
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data); // Handle the success response
-      } else {
-        console.log("Error creating batch events");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-    }
+    axios
+      .post(`${config.baseURL}/api/send_email`, { contests, selectedReminders })
+      .then((response) => {
+        console.log("Emails sent:", response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to send emails:", error);
+      });
+  };
+
+  const createEvents = () => {
+    sendEmailReminders(droppedContests);
   };
 
   return (
     <>
-      <script
-        src="https://apis.google.com/js/api.js"
-        type="text/javascript"
-      ></script>
-      <script
-        src="https://accounts.google.com/gsi/client"
-        type="text/javascript"
-      ></script>
       {data ? (
-        <div className="container px-4 m-auto py-6 w-full overflow-x-hidden">
+        <div className=" px-4 m-auto py-6 w-full overflow-x-hidden bg-[#1C1C28]">
           <motion.div
             className="flex justify-center mb-[3rem] items-center text-5xl"
             variants={textVariants}
@@ -119,9 +101,9 @@ export default function Updates() {
 
           <DragDropContext onDragEnd={handleDragEnd}>
             <Droppable droppableId="cardList">
-              {(provided) => (
+              {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.droppableProps}>
-                  <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 place-items-stretch">
                     {data.map((item, index) => {
                       return (
                         <Draggable
@@ -134,6 +116,7 @@ export default function Updates() {
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
+                              className={`${snapshot.isDraggingOver ? "" : ""}`}
                             >
                               <Card
                                 item={item}
@@ -159,11 +142,13 @@ export default function Updates() {
               droppedContests={droppedContests}
               handleDeleteContest={handleDeleteContest}
               createEvents={createEvents}
+              setSelectedReminders={setSelectedReminders}
+              selectedReminders={selectedReminders}
             />
           </DragDropContext>
 
           <motion.button
-            className="fixed bottom-4 right-4 px-6 py-3 bg-indigo-600 text-white rounded-md shadow-lg"
+            className="fixed bottom-4 left-4 px-6 py-3 bg-indigo-600 text-white rounded-md shadow-lg"
             onClick={() => setIsDrawerOpen(!isDrawerOpen)}
             variants={buttonVariants}
             whileHover="hover"

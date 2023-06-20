@@ -65,10 +65,9 @@ export default function Home() {
 
   return (
     <>
-      <div className="w-full min-h-screen text-white">
+      <div className="w-full min-h-screen text-white bg-[#1C1C28]">
         <div className="px-1 mx-auto max-w-6xl lg:-my-20 -my-10">
           <div className="flex flex-col-reverse md:flex-row lg:items-end items-center">
-            {/* text */}
             <motion.div
               className="pt-20 pb-0 px-3 xl:px-0 md:pl-4 text-center md:pb-12 md:w-1/2 md:text-left"
               variants={leftVariants}

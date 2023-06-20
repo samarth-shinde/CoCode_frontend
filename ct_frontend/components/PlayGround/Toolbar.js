@@ -86,7 +86,7 @@ export default function ToolBar({
 
   return (
     <div className="">
-      <div className=" bg-offgrey flex justify-between px-3 md:px-14 py-3 items-center text-white w-full">
+      <div className=" bg-[#1c1c28] flex justify-between px-3 md:px-14 py-3 items-center text-white w-full">
         <div className="flex items-center">
           <Image src={UserImg} width={35} height={35} />
           <span className="ml-1 md:ml-4 mr-0.5 md:mr-4 text-xs md:text-lg">
