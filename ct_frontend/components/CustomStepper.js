@@ -40,7 +40,19 @@ export default function CustomStepper({ setShowDragAndDrop }) {
   };
 
   return (
-    <Box sx={{ height: "100%", background: "#0A1929", width: "100%" }}>
+    <Box
+      sx={{
+        height: "100%",
+        background: "#0A1929",
+        width: "100%",
+        paddingTop: "32px",
+        paddingLeft: "32px",
+        paddingRight: "32px",
+      }}
+    >
+      <Typography color="white" margin="auto" width="fit-content">
+        Heading
+      </Typography>
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((step, index) => (
           <Step key={step.label}>
@@ -80,7 +92,7 @@ export default function CustomStepper({ setShowDragAndDrop }) {
         ))}
       </Stepper>
       {activeStep === steps.length && (
-        <Paper square elevation={0} sx={{ p: 3 }}>
+        <Paper square elevation={0} sx={{ p: 3, background: "#0A1929" }}>
           <Typography color="white">All steps completed</Typography>
           <Button onClick={handleDone} sx={{ mt: 1, mr: 1 }}>
             Let's Begin
