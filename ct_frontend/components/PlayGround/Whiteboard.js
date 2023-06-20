@@ -264,23 +264,25 @@ export default function Whiteboard({ username }) {
         <div className="">
        
 
-          <div className="flex justify-between items-end bg-[#1C1C28] overflow-hidden">
-            <button
-              className="bg-success text-black p-3 rounded-full text-xl"
-              onClick={() => {
-                disconnectBoard();
-              }}
-            >
-              <MdArrowBack />
-            </button>
-
-            <button
-              className="bg-success text-black p-3 rounded-full text-xl"
-              onClick={() => clearCanvas()}
-            >
-              <AiOutlineClear />
-            </button>
-            <CirclePicker color={currentColor} onChange={handleColorChange} className="right-5"/>
+          <div className="flex gap-3  justify-between items-start m-3 absolute right-0 overflow-hidden bg-transparent w-full">
+          <div className="flex items-start gap-3 ml-4">
+          <button
+          className="bg-success  text-black p-3 rounded-full text-xl "
+          onClick={() => {
+            disconnectBoard();
+          }}
+          >
+          <MdArrowBack />
+          </button>
+          
+          <button
+          className="bg-success text-black p-3 rounded-full text-xl "
+          onClick={() => clearCanvas()}
+          >
+          <AiOutlineClear />
+          </button>
+          </div>
+          <CirclePicker color={currentColor} onChange={handleColorChange} className=""/>
           </div>
             <div id="sketch" className="sketch">
               <canvas id="canvas" className="bg-white w-full"></canvas>
