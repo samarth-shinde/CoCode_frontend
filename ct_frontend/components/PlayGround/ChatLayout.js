@@ -15,34 +15,20 @@ export default function ChatLayout({ messages, sendMessage, username }) {
   ]);
 
   const [auth_token, setAuthToken] = useState("");
+  const [text, setText] = useState("");
 
+  const { tooltipshow, setTooltipshow, modaltoggle, setModaltoggle } =
+    useContext(ToolStateContext);
   useEffect(() => {
     if (cookie["token"]) {
       setAuthToken(cookie["token"]);
     }
   });
-  const { tooltipshow, setTooltipshow, modaltoggle, setModaltoggle } =
-    useContext(ToolStateContext);
 
-  const [text, setText] = useState("");
-  const getMessageTimestamp = (timestamp) => {
-    const now = moment();
-    const messageTime = moment(timestamp);
-    const diffInSeconds = now.diff(messageTime, "seconds");
-
-    if (diffInSeconds <= 30) {
-      return "just now";
-    } else if (diffInSeconds <= 60) {
-      return "1 minute ago";
-    } else if (diffInSeconds <= 60 * 60) {
-      const minutesAgo = Math.floor(diffInSeconds / 60);
-      return `${minutesAgo} minutes ago`;
-    } else if (diffInSeconds <= 24 * 60 * 60) {
-      const hoursAgo = Math.floor(diffInSeconds / (60 * 60));
-      return `${hoursAgo} hours ago`;
-    } else {
-      const daysAgo = Math.floor(diffInSeconds / (24 * 60 * 60));
-      return `${daysAgo} days ago`;
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      sendMessage(text);
+      setText("");
     }
   };
   return (
@@ -112,6 +98,7 @@ export default function ChatLayout({ messages, sendMessage, username }) {
               onChange={(e) => {
                 setText(e.target.value);
               }}
+              onKeyPress={handleKeyPress}
             />
             <button
               id="loginbtn"

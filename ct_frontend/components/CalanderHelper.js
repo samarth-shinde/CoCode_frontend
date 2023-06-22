@@ -30,14 +30,7 @@ export default function CalanderHelper({
 
   return (
     <>
-      <div className="inline-flex">
-        <ChevronLeft onClick={onClickHandler} className="text-white" />
-
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-          Choose Reminder Before:
-        </h3>
-      </div>
-      <ul className="flex">
+      <ul className="flex flex-col-reverse gap-3 m-[20px]">
         <li>
           <input
             id="30min"

@@ -16,8 +16,7 @@ export default function Whiteboard({ username }) {
   const [cookie, setCookie, removeCookie] = useCookies(["token"]);
   const [auth_token, setAuthToken] = useState("");
   const router = useRouter();
-  const [undoStack, setUndoStack] = useState([]);
-  const [redoStack, setRedoStack] = useState([]);
+
   const canvasRef = useRef(null);
   useEffect(() => {
     if (cookie["token"]) {
@@ -52,18 +51,18 @@ export default function Whiteboard({ username }) {
         const data = JSON.parse(e.data);
         if (data.warning) {
           alert("Something went wrong");
-        } else if (data.command == "canvas-data") {
+        } else if (data.command === "canvas-data") {
           const image = new Image();
-          const canvas = document.getElementById("canvas");
-          const ctx = canvas?.getContext("2d");
+          const canvas = canvasRef.current;
+          const ctx = canvas.getContext("2d");
           image.onload = function () {
-            ctx?.drawImage(image, 0, 0);
+            ctx.drawImage(image, 0, 0);
           };
           image.src = data.data;
-        } else if (data.command == "canvas-clear") {
-          const canvas = document.getElementById("canvas");
-          const ctx = canvas?.getContext("2d");
-          ctx?.clearRect(0, 0, canvas.width, canvas.height);
+        } else if (data.command === "canvas-clear") {
+          const canvas = canvasRef.current;
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
       };
 
@@ -82,13 +81,8 @@ export default function Whiteboard({ username }) {
   }, [brushSize, currentColor]);
 
   const drawOnCanvas = () => {
-    let canvas = document.querySelector("#canvas");
-    let ctx = canvas.getContext("2d");
-
-    let sketch = document.querySelector(".sketch");
-    const sketch_style = getComputedStyle(sketch);
-    canvas.width = parseInt(sketch_style.getPropertyValue("width"));
-    canvas.height = parseInt(sketch_style.getPropertyValue("height"));
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
 
     let mouse = { x: 0, y: 0 };
     let last_mouse = { x: 0, y: 0 };
@@ -122,19 +116,19 @@ export default function Whiteboard({ username }) {
     );
 
     const onPaint = function () {
-      ctx?.beginPath();
-      ctx?.moveTo(last_mouse.x, last_mouse.y);
-      ctx?.lineTo(mouse.x, mouse.y);
-      ctx?.closePath();
-      ctx?.lineWidth = brushSize;
-      ctx?.strokeStyle = currentColor;
-      ctx?.stroke();
+      ctx.beginPath();
+      ctx.moveTo(last_mouse.x, last_mouse.y);
+      ctx.lineTo(mouse.x, mouse.y);
+      ctx.closePath();
+      ctx.lineWidth = brushSize;
+      ctx.strokeStyle = currentColor;
+      ctx.stroke();
 
-      if (timeout != undefined) {
+      if (timeout !== undefined) {
         clearTimeout(timeout);
       }
       timeout = setTimeout(() => {
-        let base64Imagedata = canvas?.toDataURL("image/png");
+        const base64Imagedata = canvas.toDataURL("image/png");
 
         console.log("sending data");
         ws.send(
@@ -148,7 +142,7 @@ export default function Whiteboard({ username }) {
         );
       }, 1000);
     };
-  }
+  };
 
   const clearCanvas = () => {
     if (ws) {
@@ -161,13 +155,13 @@ export default function Whiteboard({ username }) {
         })
       );
       const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
-      setUndoStack([]);
-      setRedoStack([]);
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      sendCanvasData(canvas.toDataURL());
     }
   };
-    const sendCanvasData = (data) => {
+
+  const sendCanvasData = (data) => {
     ws.send(
       JSON.stringify({
         command: "canvas-data",
@@ -177,37 +171,6 @@ export default function Whiteboard({ username }) {
         user_name: cookieUsername["username"],
       })
     );
-  };
-
-
-  const undo = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (undoStack.length > 0) {
-      const lastState = undoStack[undoStack.length - 1];
-      const img = new Image();
-      img.src = lastState;
-      img.onload = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
-        setRedoStack([...redoStack, undoStack.pop()]);
-      };
-    }
-  };
-
-  const redo = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    if (redoStack.length > 0) {
-      const lastState = redoStack[redoStack.length - 1];
-      const img = new Image();
-      img.src = lastState;
-      img.onload = () => {
-        ctx?.clearRect(0, 0, canvas.width, canvas.height);
-        ctx?.drawImage(img, 0, 0);
-        setUndoStack([...undoStack, redoStack.pop()]);
-      };
-    }
   };
 
   const disconnectBoard = () => {
@@ -225,70 +188,73 @@ export default function Whiteboard({ username }) {
 
   const drawShape = (shape) => {
     const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
+    const ctx = canvas.getContext("2d");
 
-    ctx?.strokeStyle = currentColor;
-    ctx?.fillStyle = currentColor;
-    ctx?.lineWidth = brushSize;
+    ctx.strokeStyle = currentColor;
+    ctx.fillStyle = currentColor;
+    ctx.lineWidth = brushSize;
 
     switch (shape) {
       case "rectangle":
-        console.log("rectangle called")
+        console.log("rectangle called");
         ctx.fillRect(10, 10, 100, 100);
         break;
       case "circle":
-        console.log("cicle")
-        ctx?.beginPath();
-        ctx?.arc(100, 100, 50, 0, 2 * Math.PI);
-        ctx?.fill();
+        console.log("circle");
+        ctx.beginPath();
+        ctx.arc(100, 100, 50, 0, 2 * Math.PI);
+        ctx.fill();
         break;
       case "triangle":
-        ctx?.beginPath();
-        ctx?.moveTo(50, 50);
-        ctx?.lineTo(150, 150);
-        ctx?.lineTo(50, 150);
-        ctx?.closePath();
-        ctx?.fill();
+        ctx.beginPath();
+        ctx.moveTo(50, 50);
+        ctx.lineTo(150, 150);
+        ctx.lineTo(50, 150);
+        ctx.closePath();
+        ctx.fill();
         break;
       default:
         break;
     }
 
-    setUndoStack([...undoStack, canvas?.toDataURL()]);
-    sendCanvasData(canvas?.toDataURL());
+    sendCanvasData(canvas.toDataURL());
   };
 
   return (
     <>
       {ws ? (
         <div className="">
-       
+          <div className="flex gap-3 justify-between items-start m-3 absolute right-0 overflow-hidden bg-transparent w-full">
+            <div className="flex items-start gap-3 ml-4">
+              <button
+                className="bg-success text-black p-3 rounded-full text-xl"
+                onClick={() => {
+                  disconnectBoard();
+                }}
+              >
+                <MdArrowBack />
+              </button>
 
-          <div className="flex gap-3  justify-between items-start m-3 absolute right-0 overflow-hidden bg-transparent w-full">
-          <div className="flex items-start gap-3 ml-4">
-          <button
-          className="bg-success  text-black p-3 rounded-full text-xl "
-          onClick={() => {
-            disconnectBoard();
-          }}
-          >
-          <MdArrowBack />
-          </button>
-          
-          <button
-          className="bg-success text-black p-3 rounded-full text-xl "
-          onClick={() => clearCanvas()}
-          >
-          <AiOutlineClear />
-          </button>
-          </div>
-          <CirclePicker color={currentColor} onChange={handleColorChange} className=""/>
-          </div>
-            <div id="sketch" className="sketch">
-              <canvas id="canvas" className="bg-white w-full"></canvas>
+              <button
+                className="bg-success text-black p-3 rounded-full text-xl"
+                onClick={() => clearCanvas()}
+              >
+                <AiOutlineClear />
+              </button>
             </div>
-
-            
+            <CirclePicker
+              color={currentColor}
+              onChange={handleColorChange}
+              className=""
+            />
+          </div>
+          <div id="sketch" className="sketch">
+            <canvas
+              id="canvas"
+              className="bg-white w-full"
+              ref={canvasRef}
+            ></canvas>
+          </div>
 
           <div className="mt-2 bg-[#1C1C28]">
             <label htmlFor="brushSize">Brush Size:</label>
@@ -301,30 +267,31 @@ export default function Whiteboard({ username }) {
               value={brushSize}
               onChange={handleBrushSizeChange}
             />
-            <button className="px-2" onClick={() => drawShape("rectangle")}>Rectangle</button>
-            <button className="px-2" onClick={() => drawShape("circle")}>Circle</button>
-            <button className="px-2" onClick={() => drawShape("triangle")}>Triangle</button>
-            <button
-              onClick={undo}
-              disabled={undoStack.length === 0}
-              className="text-white px-2"
-            >
-              Undo
-            </button>
-            <button
-              onClick={redo}
-              disabled={redoStack.length === 0}
-              className="text-white px-2"
-            >
-              Redo
-            </button>
+
+            <div className="flex gap-3 justify-center items-center mt-4">
+              <button
+                className="bg-white text-black p-3 rounded-full"
+                onClick={() => drawShape("rectangle")}
+              >
+                Rectangle
+              </button>
+              <button
+                className="bg-white text-black p-3 rounded-full"
+                onClick={() => drawShape("circle")}
+              >
+                Circle
+              </button>
+              <button
+                className="bg-white text-black p-3 rounded-full"
+                onClick={() => drawShape("triangle")}
+              >
+                Triangle
+              </button>
+            </div>
           </div>
-       
         </div>
       ) : (
-        <div>
-          <Spinner />
-        </div>
+        <Spinner />
       )}
     </>
   );

@@ -85,10 +85,10 @@ export default function ToggleDrawer({
     >
       {showDragAndDrop ? (
         <>
-          <div className="inline-flex">
+          <div className="inline-flex p-[20px]">
             <IconButton>
               <KeyboardArrowDownOutlined
-                className="text-white ml-3 hover:text-gray-500"
+                className="text-white  hover:text-gray-500"
                 onClick={() => setIsDrawerOpen(false)}
                 id="header-text"
               />
@@ -97,7 +97,7 @@ export default function ToggleDrawer({
               color="white"
               margin="auto"
               width="fit-content"
-              className="font-bold text-3xl mb-5"
+              className="font-bold text-3xl"
               id="header-text"
             >
               Remind Me

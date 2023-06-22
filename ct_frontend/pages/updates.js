@@ -67,10 +67,8 @@ export default function Updates() {
   };
 
   const sendEmailReminders = (contests) => {
-    // Send an HTTP POST request to your backend endpoint to send the email reminders
-
     axios
-      .post(`${config.baseURL}/api/send_emailll`, {
+      .post(`${config.baseURL}/api/send_email`, {
         contests,
         selectedReminders,
       })
