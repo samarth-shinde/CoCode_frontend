@@ -19,6 +19,12 @@ module.exports = {
         expblue: "#0099FF",
         exppurple: "#8463d0",
       },
+      fontFamily: {
+        sans: ["Poppins", "ui-sans-serif", "system-ui"],
+        "rock-salt": ["Rock Salt", "ui-sans-serif", "system-ui"],
+        "playfair-display": ["Playfair Display", "ui-serif", "Georgia"],
+        sigmar: ["Sigmar", "ui-sans-serif", "system-ui"],
+      },
     },
   },
   devIndicators: {
@@ -26,5 +32,5 @@ module.exports = {
       warn: false,
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/forms")],
 };

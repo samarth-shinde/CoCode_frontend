@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Sigmar&display=swap");
 
 html {
   scroll-behavior: smooth;
@@ -11,7 +14,7 @@ html {
 body {
   background-color: #1c1c28;
   color: #c5c5c5;
-  font-family: "Poppins", sans-serif;
+  font-family: "Sigmar", sans-serif;
 }
 
 #header-text {

@@ -11,16 +11,16 @@ import Typography from "@mui/material/Typography";
 const steps = [
   {
     label: "Drag and Drop any contensts",
-    description: `All cintests are provided with start and end time.`,
+    description: `All contests are provided with start and end time. To Get Reminder of any contensts you need to drag and drop it into the drawer`,
   },
   {
     label: "Select Reminders",
     description:
-      "An ad group contains one or more ads which target a shared set of keywords.",
+      "After dropping those contensts you would need to select any reminder to get notified at certan timings",
   },
   {
     label: "Done",
-    description: `And You're done!`,
+    description: `And Then You're done!`,
   },
 ];
 
@@ -50,8 +50,14 @@ export default function CustomStepper({ setShowDragAndDrop }) {
         paddingRight: "32px",
       }}
     >
-      <Typography color="white" margin="auto" width="fit-content">
-        Heading
+      <Typography
+        color="white"
+        margin="auto"
+        width="fit-content"
+        className="font-bold text-3xl mb-5"
+        id="header-text"
+      >
+        Remind Me
       </Typography>
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((step, index) => (
@@ -59,29 +65,46 @@ export default function CustomStepper({ setShowDragAndDrop }) {
             <StepLabel
               optional={
                 index === 2 ? (
-                  <Typography variant="caption" color="white">
-                    Last step
-                  </Typography>
+                  <Typography color="white">Last step</Typography>
                 ) : null
               }
             >
-              <Typography color="white">{step.label}</Typography>
+              <Typography variant="h6" color="white">
+                {step.label}
+              </Typography>
             </StepLabel>
             <StepContent>
-              <Typography color="white">{step.description}</Typography>
+              <Typography variant="subtitle1" color="white">
+                {step.description}
+              </Typography>
               <Box sx={{ mb: 2 }}>
                 <div>
                   <Button
-                    variant="contained"
+                    variant="outlined"
                     onClick={handleNext}
-                    sx={{ mt: 1, mr: 1 }}
+                    sx={{
+                      mt: 1,
+                      mr: 1,
+                      ":hover": {
+                        bgcolor: "primary.main",
+                        color: "white",
+                      },
+                    }}
                   >
                     {index === steps.length - 1 ? "Finish" : "Continue"}
                   </Button>
                   <Button
                     disabled={index === 0}
+                    variant="outlined"
                     onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
+                    sx={{
+                      mt: 1,
+                      mr: 1,
+                      ":hover": {
+                        bgcolor: "primary.main",
+                        color: "white",
+                      },
+                    }}
                   >
                     Back
                   </Button>

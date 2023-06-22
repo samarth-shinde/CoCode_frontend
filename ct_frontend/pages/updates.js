@@ -70,7 +70,10 @@ export default function Updates() {
     // Send an HTTP POST request to your backend endpoint to send the email reminders
 
     axios
-      .post(`${config.baseURL}/api/send_email`, { contests, selectedReminders })
+      .post(`${config.baseURL}/api/send_emailll`, {
+        contests,
+        selectedReminders,
+      })
       .then((response) => {
         console.log("Emails sent:", response.data);
       })
@@ -144,6 +147,7 @@ export default function Updates() {
               createEvents={createEvents}
               setSelectedReminders={setSelectedReminders}
               selectedReminders={selectedReminders}
+              setDroppedContests={setDroppedContests}
             />
           </DragDropContext>
 
@@ -153,7 +157,7 @@ export default function Updates() {
             variants={buttonVariants}
             whileHover="hover"
           >
-            Toggle Drawer
+            Remind Me!
           </motion.button>
         </div>
       ) : (

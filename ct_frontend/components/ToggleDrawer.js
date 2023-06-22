@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { Droppable } from "react-beautiful-dnd";
 import CalanderHelper from "./CalanderHelper";
 import CustomStepper from "./CustomStepper";
+import Typography from "@mui/material/Typography";
 export default function ToggleDrawer({
   isDrawerOpen,
   setIsDrawerOpen,
@@ -18,21 +19,39 @@ export default function ToggleDrawer({
   createEvents,
   setSelectedReminders,
   selectedReminders,
+  setDroppedContests,
 }) {
   const [Calander, setCalander] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [showDragAndDrop, setShowDragAndDrop] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const handleAddtoCalendar = () => {
+    console.log(activeStep);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    console.log(activeStep);
     if (activeStep === 0 && droppedContests.length > 0) {
       setCalander(true);
-    } else {
+      setSuccess(false);
+    } else if (droppedContests.length === 0) {
       alert("Please drop an item first");
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (activeStep > 2) {
+    if (activeStep >= 1) {
       createEvents();
+      setCalander(false);
+      setIsLoading(true);
+      setSuccess(true);
+      setActiveStep(0);
+      setDroppedContests(false);
     }
   };
+  setTimeout(() => {
+    setIsLoading(false);
+  }, 3000);
+
+  setTimeout(() => {
+    setSuccess(false);
+  }, 5000);
 
   const truncate = (text, maxLength) => {
     if (text.length > maxLength) {
@@ -61,7 +80,7 @@ export default function ToggleDrawer({
       }}
       classes={{
         paper:
-          "bg-[#17203F] opacity-[5px] top-[10%] bottom-[10%] rounded-lg !right-[10px] left-[unset] flex flex-col shadow-offgrey shadow-2xl right-5 w-96 overflow-hidden justify-between ",
+          "bg-[#17203F] opacity-[5px] top-[10%] bottom-[10%] rounded-lg !right-[10px] left-[unset] flex flex-col shadow-offgrey shadow-2xl right-5 w-96 overflow-hidden justify-between",
       }}
     >
       {showDragAndDrop ? (
@@ -71,11 +90,18 @@ export default function ToggleDrawer({
               <KeyboardArrowDownOutlined
                 className="text-white ml-3 hover:text-gray-500"
                 onClick={() => setIsDrawerOpen(false)}
+                id="header-text"
               />
             </IconButton>
-            <p className="text-white mr-3 my-auto">
-              Drop a Contest You want to Compete in
-            </p>
+            <Typography
+              color="white"
+              margin="auto"
+              width="fit-content"
+              className="font-bold text-3xl mb-5"
+              id="header-text"
+            >
+              Remind Me
+            </Typography>
           </div>
 
           {!Calander && (
@@ -131,13 +157,40 @@ export default function ToggleDrawer({
           )}
 
           <motion.button
-            className="bg-indigo-500 w-full py-3 text-white"
+            className={`${
+              success ? "bg-green-500" : "bg-indigo-500"
+            } w-full py-3 text-white`}
             variants={buttonVariants}
             whileHover="hover"
             onClick={handleAddtoCalendar}
             setCalander={setCalander}
           >
-            Add to Calendar
+            {isLoading && (
+              <svg
+                v-show="isLoading"
+                className="w-5 h-5 text-white animate-spin m-auto"
+                fill="none"
+                viewBox="0 0 25 25"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="5"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            )}
+            <span className={`${isLoading ? "hidden" : ""}`}>
+              {`${success ? "DONE!" : "Add to Calander"}`}
+            </span>
           </motion.button>
         </>
       ) : (

@@ -65,41 +65,35 @@ export default function ChatLayout({ messages, sendMessage, username }) {
           </div>
         </div>
 
-        {/* timeline */}
         <div
           id="chat-window"
           className=" h-full pt-8 px-4 md:px-16 overflow-y-scroll scrollbar"
         >
-          <div className="timeline max-w-full  m-auto flex flex-col flex-wrap relative">
+          <div className=" max-w-full   flex flex-col flex-wrap relative">
             {messages.map((message, index) => {
               if (message.user_name === cookieUsername["username"]) {
                 return (
-                  <div
-                    key={index}
-                    className="timeline-item mb-5 w-fit relative self-end"
-                  >
-                    <div className="timeline-content  bg-gradient-to-t from-blue-700 to-sky-500 px-4 py-[6px] rounded-lg ">
-                      <h2 className=" subpixel-antialiased text-s align-text-top text-white">
-                        @{message.user_name}
-                      </h2>
+                  <div key={index} className=" mb-5 w-fit relative self-end">
+                    <div className="  bg-gradient-to-t from-blue-700 to-sky-500 px-4 py-[6px] rounded-lg ">
                       <p className="text-lg">{message.message}</p>
-                      <span>{moment(message.timestamp).format("hh:mm a")}</span>
                     </div>
+                    <span className="text-sm">
+                      {moment(message.timestamp).format("hh:mm a")}
+                    </span>
                   </div>
                 );
               } else {
                 return (
-                  <div
-                    key={index}
-                    className="timeline-item mb-5 w-fit relative"
-                  >
-                    <div className="timeline-content bg-gradient-to-b from-blue-700 to-indigo-600 px-4 py-[6px] rounded">
-                      <h2 className=" subpixel-antialiased text-s align-text-top text-white items-start">
-                        @{message.user_name}
-                      </h2>
+                  <div key={index} className=" mb-5 w-fit relative">
+                    <h2 className=" subpixel-antialiased text-sm align-text-top  items-start">
+                      @{message.user_name}
+                    </h2>
+                    <div className=" bg-gradient-to-b from-blue-700 to-indigo-600 px-4 py-[6px] rounded">
                       <p className="text-lg">{message.message}</p>
-                      <span>{moment(message.timestamp).format("hh:mm a")}</span>
                     </div>
+                    <span className="text-sm">
+                      {moment(message.timestamp).format("hh:mm a")}
+                    </span>
                   </div>
                 );
               }
