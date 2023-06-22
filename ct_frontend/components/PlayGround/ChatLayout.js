@@ -83,9 +83,7 @@ export default function ChatLayout({ messages, sendMessage, username }) {
                         @{message.user_name}
                       </h2>
                       <p className="text-lg">{message.message}</p>
-                      <span>
-                        {moment(message.timestamp).format("hh:mm:ss a")}
-                      </span>
+                      <span>{moment(message.timestamp).format("hh:mm a")}</span>
                     </div>
                   </div>
                 );
