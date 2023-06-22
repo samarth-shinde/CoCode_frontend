@@ -6,12 +6,14 @@ import { BiCodeCurly } from "react-icons/bi";
 import Link from "next/link";
 import ChatMenu from "../ChatMenu";
 import { ToolStateContext } from "../../store/ToolStateContext";
+import moment from "moment";
 
 export default function ChatLayout({ messages, sendMessage, username }) {
   const [cookie, setCookie, removeCookie] = useCookies(["token"]);
   const [cookieUsername, setCookieUsername, removeCookieUsername] = useCookies([
     "username",
   ]);
+
   const [auth_token, setAuthToken] = useState("");
 
   useEffect(() => {
@@ -23,7 +25,26 @@ export default function ChatLayout({ messages, sendMessage, username }) {
     useContext(ToolStateContext);
 
   const [text, setText] = useState("");
+  const getMessageTimestamp = (timestamp) => {
+    const now = moment();
+    const messageTime = moment(timestamp);
+    const diffInSeconds = now.diff(messageTime, "seconds");
 
+    if (diffInSeconds <= 30) {
+      return "just now";
+    } else if (diffInSeconds <= 60) {
+      return "1 minute ago";
+    } else if (diffInSeconds <= 60 * 60) {
+      const minutesAgo = Math.floor(diffInSeconds / 60);
+      return `${minutesAgo} minutes ago`;
+    } else if (diffInSeconds <= 24 * 60 * 60) {
+      const hoursAgo = Math.floor(diffInSeconds / (60 * 60));
+      return `${hoursAgo} hours ago`;
+    } else {
+      const daysAgo = Math.floor(diffInSeconds / (24 * 60 * 60));
+      return `${daysAgo} days ago`;
+    }
+  };
   return (
     <>
       <div className=" h-[68vh] relative pb-0 md:pb-0 w-full">
@@ -58,10 +79,13 @@ export default function ChatLayout({ messages, sendMessage, username }) {
                     className="timeline-item mb-5 w-fit relative self-end"
                   >
                     <div className="timeline-content  bg-gradient-to-t from-blue-700 to-sky-500 px-4 py-[6px] rounded-lg ">
-                      <h3 className=" subpixel-antialiased text-s align-text-top text-white">
+                      <h2 className=" subpixel-antialiased text-s align-text-top text-white">
                         @{message.user_name}
-                      </h3>
+                      </h2>
                       <p className="text-lg">{message.message}</p>
+                      <span>
+                        {moment(message.timestamp).format("hh:mm:ss a")}
+                      </span>
                     </div>
                   </div>
                 );
@@ -72,10 +96,11 @@ export default function ChatLayout({ messages, sendMessage, username }) {
                     className="timeline-item mb-5 w-fit relative"
                   >
                     <div className="timeline-content bg-gradient-to-b from-blue-700 to-indigo-600 px-4 py-[6px] rounded">
-                      <h3 className=" subpixel-antialiased text-s align-text-top text-white items-start">
+                      <h2 className=" subpixel-antialiased text-s align-text-top text-white items-start">
                         @{message.user_name}
-                      </h3>
+                      </h2>
                       <p className="text-lg">{message.message}</p>
+                      <span>{moment(message.timestamp).format("hh:mm a")}</span>
                     </div>
                   </div>
                 );

@@ -48,9 +48,10 @@ export default function ChatWs({ username }) {
         } else if (data.message) {
           console.log(data.token);
           console.log(auth_token);
-          var obj = {
+          const obj = {
             message: data.message,
             user_name: data.username,
+            timestamp: data.timestamp,
           };
           // var temp = [... messages];
           // temp.push(obj);
