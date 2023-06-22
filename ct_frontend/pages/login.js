@@ -93,7 +93,7 @@ export default function Login() {
       {alert && <Alert typeAlert={typealert} message={alert} />}
 
       <motion.div
-        className="container w-full mt-4"
+        className=" w-full mt-4"
         initial={{
           opacity: 0,
           translateY: "100vh",
